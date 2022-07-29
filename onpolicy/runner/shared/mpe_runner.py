@@ -40,7 +40,7 @@ class MPERunner(Runner):
         start = time.time()
         episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
 
-        # for episode in range(episodes*0.75):
+        # for episode in range(int(episodes*0.75)):
         #     if self.use_linear_lr_decay:
         #         self.trainer.policy.lr_decay(episode, episodes)
 
@@ -99,7 +99,7 @@ class MPERunner(Runner):
         #     if episode % self.eval_interval == 0 and self.use_eval:
         #         self.eval(total_num_steps)
 
-        for episode in range(episodes*0.75, episodes):
+        for episode in range(int(episodes*0.75), episodes):
             print(episode)
             if self.use_linear_lr_decay:
                 self.trainer.policy.lr_decay(episode, episodes)
