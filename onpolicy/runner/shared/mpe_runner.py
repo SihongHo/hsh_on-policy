@@ -45,7 +45,10 @@ class MPERunner(Runner):
 
             for step in range(self.episode_length):
                 # Sample actions
-                values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect_noise(step)
+                if episode <= int(episodes * 0.5):
+                    values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect(step)
+                else:
+                    values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect_noise(step)
                     
                 # Obser reward and next obs
                 obs, rewards, dones, infos = self.envs.step(actions_env)
