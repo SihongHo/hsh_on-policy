@@ -179,6 +179,7 @@ def get_config():
     parser.add_argument("--user_name", type=str, default='marl',help="[for wandb usage], to specify user's name for simply collecting training data.")
     parser.add_argument("--use_wandb", action='store_false', default=True, help="[for wandb usage], by default True, will log date to wandb server. or else will use tensorboard to log data.")
     parser.add_argument('--noise_std', type=float, default=1.0, help='{0.0, 1.0, 2.0, 3.0, ...}, noise standard deviation')
+    parser.add_argument('--threshold', type=float, default=0.5, help='{0.0, 1.0, 2.0, 3.0, ...}, noise standard deviation')
     parser.add_argument('--robust_run', type=boolean, default=False, help='True or False')
     
     # env parameters

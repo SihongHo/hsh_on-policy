@@ -41,6 +41,7 @@ class Runner(object):
         self.use_render = self.all_args.use_render
         self.recurrent_N = self.all_args.recurrent_N
         self.noise_std = self.all_args.noise_std
+        self.threshold = self.all_args.threshold
 
         # interval
         self.save_interval = self.all_args.save_interval

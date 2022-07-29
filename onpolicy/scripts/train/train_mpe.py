@@ -152,8 +152,10 @@ def main(args):
     runner = Runner(config)
     print("begin to run")
     if all_args.robust_run == False:
+        print("Non-robust method")
         runner.run()
     else:
+        print("Robust method")
         runner.robust_run()
     
     # post process

@@ -6,7 +6,7 @@ import wandb
 import imageio
 import scipy.stats as stats
 
-def TruncatedNormal(mean = 0.0, std = 1.0, threshold = 1.0):
+def TruncatedNormal(mean = 0.0, std = 1.0, threshold = 0.5):
     lower, upper = -threshold, threshold
     mu, sigma = mean, std
     X = stats.truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
@@ -22,7 +22,7 @@ class MPERunner(Runner):
         if self.noise_std == 0.0:
             self.X = None
         else:
-            self.X = TruncatedNormal(std = self.noise_std)
+            self.X = TruncatedNormal(std = self.noise_std, threshold = self.threshold)
 
     def addNoise(self, origin_obs):
         if self.noise_std == 0.0:
