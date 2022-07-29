@@ -228,6 +228,7 @@ class MPERunner(Runner):
     
     @torch.no_grad()
     def collect_noise(self, step):
+        print("collect_noise")
         values = []
         actions = []
         temp_actions_env = []

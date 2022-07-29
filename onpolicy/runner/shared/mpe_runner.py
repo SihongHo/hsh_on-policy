@@ -174,6 +174,7 @@ class MPERunner(Runner):
 
     @torch.no_grad()
     def collect_noise(self, step):
+        print("collect_noise")
         self.trainer.prep_rollout()
         share_obs_noise = self.addNoise(np.concatenate(self.buffer.share_obs[step]))
         obs_noise = self.addNoise(np.concatenate(self.buffer.obs[step]))
