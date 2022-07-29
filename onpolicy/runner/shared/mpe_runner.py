@@ -32,7 +32,71 @@ class MPERunner(Runner):
         noise.shape = obs_array.shape
         obs_array = obs_array + noise
         return obs_array  
+    
+    def robust_run(self):
+        self.warmup()
 
+        start = time.time()
+        episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
+
+        for episode in range(episodes):
+            if self.use_linear_lr_decay:
+                self.trainer.policy.lr_decay(episode, episodes)
+
+            for step in range(self.episode_length):
+                # Sample actions
+                values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect_noise(step)
+                    
+                # Obser reward and next obs
+                obs, rewards, dones, infos = self.envs.step(actions_env)
+
+                data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic
+
+                # insert data into buffer
+                self.insert(data)
+
+            # compute return and update network
+            self.compute()
+            train_infos = self.train()
+            
+            # post process
+            total_num_steps = (episode + 1) * self.episode_length * self.n_rollout_threads
+            
+            # save model
+            if (episode % self.save_interval == 0 or episode == episodes - 1):
+                self.save()
+
+            # log information
+            if episode % self.log_interval == 0:
+                end = time.time()
+                print("\n Scenario {} Algo {} Exp {} updates {}/{} episodes, total num timesteps {}/{}, FPS {}.\n"
+                        .format(self.all_args.scenario_name,
+                                self.algorithm_name,
+                                self.experiment_name,
+                                episode,
+                                episodes,
+                                total_num_steps,
+                                self.num_env_steps,
+                                int(total_num_steps / (end - start))))
+
+                if self.env_name == "MPE":
+                    env_infos = {}
+                    for agent_id in range(self.num_agents):
+                        idv_rews = []
+                        for info in infos:
+                            if 'individual_reward' in info[agent_id].keys():
+                                idv_rews.append(info[agent_id]['individual_reward'])
+                        agent_k = 'agent%i/individual_rewards' % agent_id
+                        env_infos[agent_k] = idv_rews
+
+                train_infos["average_episode_rewards"] = np.mean(self.buffer.rewards) * self.episode_length
+                print("robust average episode rewards is {}".format(train_infos["average_episode_rewards"]))
+                self.log_train(train_infos, total_num_steps)
+                self.log_env(env_infos, total_num_steps)
+
+            # eval
+            if episode % self.eval_interval == 0 and self.use_eval:
+                self.eval_noise(total_num_steps)
 
     def run(self):
         self.warmup()   
