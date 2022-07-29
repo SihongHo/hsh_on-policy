@@ -150,6 +150,7 @@ def main(args):
 
     print("begin to initialize runner")
     runner = Runner(config)
+    print("begin to run")
     runner.run()
     
     # post process
