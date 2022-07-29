@@ -151,7 +151,10 @@ def main(args):
     print("begin to initialize runner")
     runner = Runner(config)
     print("begin to run")
-    runner.run()
+    if all_args.robust_run == False:
+        runner.run()
+    else:
+        runner.robust_run()
     
     # post process
     envs.close()
