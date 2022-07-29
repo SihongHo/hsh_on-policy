@@ -99,6 +99,7 @@ class MPERunner(Runner):
         #         self.eval(total_num_steps)
 
         for episode in range(episodes*0.75, episodes):
+            print(episode)
             if self.use_linear_lr_decay:
                 self.trainer.policy.lr_decay(episode, episodes)
 
@@ -297,6 +298,7 @@ class MPERunner(Runner):
     
     @torch.no_grad()
     def eval_noise(self, total_num_steps):
+        print("eval_noise")
         eval_episode_rewards = []
         eval_obs = self.eval_envs.reset()
 

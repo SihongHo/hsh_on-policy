@@ -373,6 +373,7 @@ class MPERunner(Runner):
 
     @torch.no_grad()
     def eval_noise(self, total_num_steps):
+        print("eval_noise")
         eval_episode_rewards = []
         eval_obs = self.eval_envs.reset()
 
