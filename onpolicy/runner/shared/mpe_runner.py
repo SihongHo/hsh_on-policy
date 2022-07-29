@@ -39,7 +39,7 @@ class MPERunner(Runner):
 
         start = time.time()
         episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
-        print("episodes is {}".format(episodes))
+        # print("episodes is {}".format(episodes))
 
         # for episode in range(int(episodes*0.75)):
         #     if self.use_linear_lr_decay:
@@ -101,7 +101,7 @@ class MPERunner(Runner):
         #         self.eval(total_num_steps)
 
         for episode in range(int(episodes*0.75), episodes):
-            print(episode)
+            # print(episode)
             if self.use_linear_lr_decay:
                 self.trainer.policy.lr_decay(episode, episodes)
 
@@ -178,7 +178,7 @@ class MPERunner(Runner):
 
     @torch.no_grad()
     def collect_noise(self, step):
-        print("collect_noise")
+        # print("collect_noise")
         self.trainer.prep_rollout()
         share_obs_noise = self.addNoise(np.concatenate(self.buffer.share_obs[step]))
         obs_noise = self.addNoise(np.concatenate(self.buffer.obs[step]))
