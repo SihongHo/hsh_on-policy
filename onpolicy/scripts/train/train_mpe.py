@@ -148,6 +148,7 @@ def main(args):
     else:
         from onpolicy.runner.separated.mpe_runner import MPERunner as Runner
 
+    print("begin to initialize runner")
     runner = Runner(config)
     runner.run()
     
