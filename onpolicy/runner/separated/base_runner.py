@@ -37,6 +37,7 @@ class Runner(object):
         self.use_wandb = self.all_args.use_wandb
         self.use_render = self.all_args.use_render
         self.recurrent_N = self.all_args.recurrent_N
+        self.noise_std = self.all_args.noise_std
 
         # interval
         self.save_interval = self.all_args.save_interval
@@ -129,6 +130,13 @@ class Runner(object):
             train_infos.append(train_info)       
             self.buffer[agent_id].after_update()
 
+        return train_infos
+
+    def without_train(self):
+        """Train policies with data in buffer. """
+        # self.trainer.prep_training()
+        train_infos = self.trainer.without_train_get_inform(self.buffer)      
+        # self.buffer.after_update()
         return train_infos
 
     def save(self):
