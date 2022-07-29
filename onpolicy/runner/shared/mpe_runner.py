@@ -34,6 +34,7 @@ class MPERunner(Runner):
         return obs_array  
 
     def run(self):
+        print("start to run")
         self.warmup()   
 
         start = time.time()
