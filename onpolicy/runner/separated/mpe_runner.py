@@ -43,60 +43,60 @@ class MPERunner(Runner):
         start = time.time()
         episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
 
-        # for episode in range(int(episodes * 0.75)): # 3/4 training
-        #     if self.use_linear_lr_decay:
-        #         for agent_id in range(self.num_agents):
-        #             self.trainer[agent_id].policy.lr_decay(episode, episodes)
+        for episode in range(int(episodes * 0.75)): # 3/4 training
+            if self.use_linear_lr_decay:
+                for agent_id in range(self.num_agents):
+                    self.trainer[agent_id].policy.lr_decay(episode, episodes)
 
-        #     for step in range(self.episode_length):
-        #         # Sample actions
-        #         values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect(step)
+            for step in range(self.episode_length):
+                # Sample actions
+                values, actions, action_log_probs, rnn_states, rnn_states_critic, actions_env = self.collect(step)
                     
-        #         # Obser reward and next obs
-        #         obs, rewards, dones, infos = self.envs.step(actions_env)
+                # Obser reward and next obs
+                obs, rewards, dones, infos = self.envs.step(actions_env)
 
-        #         data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic 
+                data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic 
                 
-        #         # insert data into buffer
-        #         self.insert(data)
+                # insert data into buffer
+                self.insert(data)
 
-        #     # compute return and update network
-        #     self.compute()
-        #     train_infos = self.train()
+            # compute return and update network
+            self.compute()
+            train_infos = self.train()
             
-        #     # post process
-        #     total_num_steps = (episode + 1) * self.episode_length * self.n_rollout_threads
+            # post process
+            total_num_steps = (episode + 1) * self.episode_length * self.n_rollout_threads
             
-        #     # save model
-        #     if (episode % self.save_interval == 0 or episode == episodes - 1):
-        #         self.save()
+            # save model
+            if (episode % self.save_interval == 0 or episode == episodes - 1):
+                self.save()
 
-        #     # log information
-        #     if episode % self.log_interval == 0:
-        #         end = time.time()
-        #         print("\n Scenario {} Algo {} Exp {} updates {}/{} episodes, total num timesteps {}/{}, FPS {}.\n"
-        #                 .format(self.all_args.scenario_name,
-        #                         self.algorithm_name,
-        #                         self.experiment_name,
-        #                         episode,
-        #                         episodes,
-        #                         total_num_steps,
-        #                         self.num_env_steps,
-        #                         int(total_num_steps / (end - start))))
+            # log information
+            if episode % self.log_interval == 0:
+                end = time.time()
+                print("\n Scenario {} Algo {} Exp {} updates {}/{} episodes, total num timesteps {}/{}, FPS {}.\n"
+                        .format(self.all_args.scenario_name,
+                                self.algorithm_name,
+                                self.experiment_name,
+                                episode,
+                                episodes,
+                                total_num_steps,
+                                self.num_env_steps,
+                                int(total_num_steps / (end - start))))
 
-        #         if self.env_name == "MPE":
-        #             for agent_id in range(self.num_agents):
-        #                 idv_rews = []
-        #                 for info in infos:
-        #                     if 'individual_reward' in info[agent_id].keys():
-        #                         idv_rews.append(info[agent_id]['individual_reward'])
-        #                 train_infos[agent_id].update({'individual_rewards': np.mean(idv_rews)})
-        #                 train_infos[agent_id].update({"average_episode_rewards": np.mean(self.buffer[agent_id].rewards) * self.episode_length})
-        #         self.log_train(train_infos, total_num_steps)
+                if self.env_name == "MPE":
+                    for agent_id in range(self.num_agents):
+                        idv_rews = []
+                        for info in infos:
+                            if 'individual_reward' in info[agent_id].keys():
+                                idv_rews.append(info[agent_id]['individual_reward'])
+                        train_infos[agent_id].update({'individual_rewards': np.mean(idv_rews)})
+                        train_infos[agent_id].update({"average_episode_rewards": np.mean(self.buffer[agent_id].rewards) * self.episode_length})
+                self.log_train(train_infos, total_num_steps)
 
-        #     # eval
-        #     if episode % self.eval_interval == 0 and self.use_eval:
-        #         self.eval(total_num_steps)
+            # eval
+            if episode % self.eval_interval == 0 and self.use_eval:
+                self.eval(total_num_steps)
 
         for episode in range(int(episodes * 0.75), episodes): # 1/4 testing
             if self.use_linear_lr_decay:
@@ -110,14 +110,14 @@ class MPERunner(Runner):
                 # Obser reward and next obs
                 obs, rewards, dones, infos = self.envs.step(actions_env)
 
-                # data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic 
+                data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic 
                 
                 # insert data into buffer
-                # self.insert(data)
+                self.insert(data)
 
             # compute return and update network
             # self.compute()
-            train_infos = self.train()
+            # train_infos = self.train()
             train_infos = self.without_train()
             
             # post process
