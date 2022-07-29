@@ -34,11 +34,11 @@ class MPERunner(Runner):
         return obs_array  
 
     def run(self):
-        print("start to run")
         self.warmup()   
 
         start = time.time()
         episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
+        print("episodes is {}".format(episodes))
 
         # for episode in range(int(episodes*0.75)):
         #     if self.use_linear_lr_decay:
