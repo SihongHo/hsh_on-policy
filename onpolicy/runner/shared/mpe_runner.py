@@ -4,6 +4,13 @@ import torch
 from onpolicy.runner.shared.base_runner import Runner
 import wandb
 import imageio
+import scipy.stats as stats
+
+def TruncatedNormal(mean = 0.0, std = 1.0, threshold = 1.0):
+    lower, upper = -threshold, threshold
+    mu, sigma = mean, std
+    X = stats.truncnorm((lower - mu) / sigma, (upper - mu) / sigma, loc=mu, scale=sigma)
+    return X
 
 def _t2n(x):
     return x.detach().cpu().numpy()
@@ -12,6 +19,19 @@ class MPERunner(Runner):
     """Runner class to perform training, evaluation. and data collection for the MPEs. See parent class for details."""
     def __init__(self, config):
         super(MPERunner, self).__init__(config)
+        if self.noise_std == 0.0:
+            self.X = None
+        else:
+            self.X = TruncatedNormal(std = self.noise_std)
+
+    def addNoise(self, origin_obs):
+        if self.noise_std == 0.0:
+            return origin_obs
+        obs_array = origin_obs
+        noise = self.X.rvs(np.size(obs_array))
+        noise.shape = obs_array.shape
+        obs_array = obs_array + noise
+        return obs_array  
 
     def run(self):
         self.warmup()   
