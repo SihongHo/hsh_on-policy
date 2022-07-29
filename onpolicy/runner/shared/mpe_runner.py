@@ -161,6 +161,7 @@ class MPERunner(Runner):
                 self.eval_noise(total_num_steps)
 
     def warmup(self):
+        print("begin to warm up!")
         # reset env
         obs = self.envs.reset()
 
