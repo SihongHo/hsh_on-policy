@@ -109,10 +109,10 @@ class MPERunner(Runner):
                 # Obser reward and next obs
                 obs, rewards, dones, infos = self.envs.step(actions_env)
 
-                # data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic
+                data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic
 
                 # insert data into buffer
-                # self.insert(data)
+                self.insert(data)
 
             # compute return and update network
             # self.compute()
@@ -123,8 +123,8 @@ class MPERunner(Runner):
             total_num_steps = (episode + 1) * self.episode_length * self.n_rollout_threads
             
             # save model
-            if (episode % self.save_interval == 0 or episode == episodes - 1):
-                self.save()
+            # if (episode % self.save_interval == 0 or episode == episodes - 1):
+            #     self.save()
 
             # log information
             if episode % self.log_interval == 0:
