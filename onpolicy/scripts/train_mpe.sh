@@ -4,7 +4,8 @@ scenario="simple_spread"  # simple_speaker_listener # simple_reference
 num_landmarks=3
 num_agents=3
 algo="rmappo"
-exp="check"
+# exp="check"
+exp = "test_code"
 seed_max=1
 
 echo "env is ${env}, scenario is ${scenario}, algo is ${algo}, exp is ${exp}, max seed is ${seed_max}"
