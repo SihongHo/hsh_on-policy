@@ -124,6 +124,13 @@ class Runner(object):
         self.buffer.after_update()
         return train_infos
 
+    def without_train(self):
+        """Train policies with data in buffer. """
+        # self.trainer.prep_training()
+        train_infos = self.trainer.without_train_get_inform(self.buffer)      
+        # self.buffer.after_update()
+        return train_infos
+
     def save(self):
         """Save policy's actor and critic networks."""
         policy_actor = self.trainer.policy.actor
