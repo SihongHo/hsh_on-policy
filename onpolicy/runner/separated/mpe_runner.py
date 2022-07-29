@@ -43,7 +43,7 @@ class MPERunner(Runner):
         start = time.time()
         episodes = int(self.num_env_steps) // self.episode_length // self.n_rollout_threads
 
-        # for episode in range(episodes * 0.75): # 3/4 training
+        # for episode in range(int(episodes * 0.75)): # 3/4 training
         #     if self.use_linear_lr_decay:
         #         for agent_id in range(self.num_agents):
         #             self.trainer[agent_id].policy.lr_decay(episode, episodes)
@@ -98,7 +98,7 @@ class MPERunner(Runner):
         #     if episode % self.eval_interval == 0 and self.use_eval:
         #         self.eval(total_num_steps)
 
-        for episode in range(episodes * 0.75, episodes): # 1/4 testing
+        for episode in range(int(episodes * 0.75), episodes): # 1/4 testing
             if self.use_linear_lr_decay:
                 for agent_id in range(self.num_agents):
                     self.trainer[agent_id].policy.lr_decay(episode, episodes)
@@ -117,8 +117,8 @@ class MPERunner(Runner):
 
             # compute return and update network
             # self.compute()
-            # train_infos = self.train()
-            train_infos = self.without_train_get_inform()
+            train_infos = self.train()
+            train_infos = self.without_train()
             
             # post process
             total_num_steps = (episode + 1) * self.episode_length * self.n_rollout_threads
